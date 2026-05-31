@@ -15,16 +15,26 @@ function getDB() {
 
     if (DB_TYPE === 'sqlite') {
         $dir = dirname(DB_PATH);
-        if (!is_dir($dir)) mkdir($dir, 0755, true);
-        $pdo = new PDO('sqlite:' . DB_PATH);
-        $pdo->exec('PRAGMA journal_mode=WAL');
-        $pdo->exec('PRAGMA foreign_keys=ON');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        try {
+            $pdo = new PDO('sqlite:' . DB_PATH);
+            $pdo->exec('PRAGMA journal_mode=WAL');
+            $pdo->exec('PRAGMA foreign_keys=ON');
+        } catch (PDOException $e) {
+            throw new Exception('SQLite connection failed: ' . $e->getMessage() . ' (Path: ' . DB_PATH . ')');
+        }
     } else {
-        $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
-        $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
+        try {
+            $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception('MySQL connection failed: ' . $e->getMessage());
+        }
     }
 
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
