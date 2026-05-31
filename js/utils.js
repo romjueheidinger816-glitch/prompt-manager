@@ -1,20 +1,21 @@
-/**
- * ¹¤¾ßº¯Êý
+ï»¿/**
+ * ï¿½ï¿½ï¿½ßºï¿½ï¿½ï¿½
  */
 
-// Toast ÌáÊ¾
-function showToast(message, type = 'info') {
+// Toast ï¿½ï¿½Ê¾
+function showToast(messageKey, type = 'info') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.textContent = message;
+    // Ö§ï¿½Ö´ï¿½ï¿½ë·­ï¿½ï¿½ key ï¿½ï¿½Ô­Ê¼ï¿½Ä±ï¿½
+    toast.textContent = (Lang && Lang.t(messageKey)) || messageKey;
     container.appendChild(toast);
     setTimeout(() => {
         if (toast.parentNode) toast.parentNode.removeChild(toast);
     }, 3000);
 }
 
-// ÈÕÆÚ¸ñÊ½»¯
+// ï¿½ï¿½ï¿½Ú¸ï¿½Ê½ï¿½ï¿½
 function formatDate(dateStr) {
     if (!dateStr) return '-';
     const d = new Date(dateStr);
@@ -24,10 +25,17 @@ function formatDate(dateStr) {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return '¸Õ¸Õ';
-    if (minutes < 60) return minutes + ' ·ÖÖÓÇ°';
-    if (hours < 24) return hours + ' Ð¡Ê±Ç°';
-    if (days < 7) return days + ' ÌìÇ°';
+    if (Lang.current === 'zh') {
+        if (minutes < 1) return 'ï¿½Õ¸ï¿½';
+        if (minutes < 60) return minutes + ' ï¿½ï¿½ï¿½ï¿½Ç°';
+        if (hours < 24) return hours + ' Ð¡Ê±Ç°';
+        if (days < 7) return days + ' ï¿½ï¿½Ç°';
+    } else {
+        if (minutes < 1) return 'just now';
+        if (minutes < 60) return minutes + ' min ago';
+        if (hours < 24) return hours + 'h ago';
+        if (days < 7) return days + 'd ago';
+    }
 
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -35,21 +43,19 @@ function formatDate(dateStr) {
     return `${y}-${m}-${day}`;
 }
 
-// ½ØÈ¡ÎÄ±¾
+// ï¿½ï¿½È¡ï¿½Ä±ï¿½
 function truncate(text, maxLen = 120) {
     if (!text) return '';
     text = text.replace(/\{\{.*?\}\}/g, function(match) {
-        // Õ¹Ê¾±äÁ¿Ê±±£Áô±äÁ¿Ãû
         const name = match.replace(/\{\{|\}\}/g, '').split('|')[0];
         return '{{' + name + '}}';
     });
-    // È¥³ý Markdown Óï·¨·ûºÅ£¨¼òµ¥´¦Àí£©
     text = text.replace(/[#*_`~>\[\]()!]/g, '');
     if (text.length <= maxLen) return text;
     return text.substring(0, maxLen) + '...';
 }
 
-// ·À¶¶
+// ï¿½ï¿½ï¿½ï¿½
 function debounce(fn, delay = 300) {
     let timer;
     return function(...args) {
@@ -58,7 +64,7 @@ function debounce(fn, delay = 300) {
     };
 }
 
-// ¼ì²âÌáÊ¾´ÊÖÐµÄ±äÁ¿
+// ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ÐµÄ±ï¿½ï¿½ï¿½
 function extractVariables(content) {
     const regex = /\{\{(.+?)(?:\|(.+?))?\}\}/g;
     const vars = [];
@@ -75,7 +81,7 @@ function extractVariables(content) {
     return vars;
 }
 
-// Ìæ»»±äÁ¿
+// ï¿½æ»»ï¿½ï¿½ï¿½ï¿½
 function replaceVariables(content, values) {
     return content.replace(/\{\{(.+?)(?:\|(.+?))?\}\}/g, function(match, name) {
         const key = name.trim();
@@ -83,7 +89,7 @@ function replaceVariables(content, values) {
     });
 }
 
-// ¸ßÁÁ Markdown ÖÐµÄ±äÁ¿
+// ï¿½ï¿½ï¿½ï¿½ Markdown ï¿½ÐµÄ±ï¿½ï¿½ï¿½
 function highlightVariables(html) {
     return html.replace(
         /\{\{(.+?)(?:\|(.+?))?\}\}/g,
@@ -91,14 +97,13 @@ function highlightVariables(html) {
     );
 }
 
-// ¸´ÖÆµ½¼ôÌù°å
+// ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 async function copyToClipboard(text) {
     try {
         await navigator.clipboard.writeText(text);
-        showToast('ÒÑ¸´ÖÆµ½¼ôÌù°å', 'success');
+        showToast('toastCopied', 'success');
         return true;
     } catch (e) {
-        // ½µ¼¶·½°¸
         const ta = document.createElement('textarea');
         ta.value = text;
         ta.style.cssText = 'position:fixed;left:-9999px;';
@@ -106,12 +111,12 @@ async function copyToClipboard(text) {
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast('ÒÑ¸´ÖÆµ½¼ôÌù°å', 'success');
+        showToast('toastCopied', 'success');
         return true;
     }
 }
 
-// Éî¿½±´
+// ï¿½î¿½ï¿½ï¿½
 function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }

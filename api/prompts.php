@@ -1,14 +1,14 @@
-<?php
+ï»¿<?php
 /**
- * ÌáÊ¾´Ê½Ó¿Ú´¦Àí
- * GET    /api/prompts          - ÁÐ±í
- * GET    /api/prompts/{id}     - ÏêÇé
- * POST   /api/prompts          - ´´½¨
- * PUT    /api/prompts/{id}     - ¸üÐÂ
- * DELETE /api/prompts/{id}     - ÈíÉ¾³ý
- * POST   /api/prompts/{id}/use     - ¼ÇÂ¼Ê¹ÓÃ
- * GET    /api/prompts/favorites    - ÊÕ²ØÁÐ±í
- * POST   /api/prompts/{id}/favorite - ÇÐ»»ÊÕ²Ø
+ * ï¿½ï¿½Ê¾ï¿½Ê½Ó¿Ú´ï¿½ï¿½ï¿½
+ * GET    /api/prompts          - ï¿½Ð±ï¿½
+ * GET    /api/prompts/{id}     - ï¿½ï¿½ï¿½ï¿½
+ * POST   /api/prompts          - ï¿½ï¿½ï¿½ï¿½
+ * PUT    /api/prompts/{id}     - ï¿½ï¿½ï¿½ï¿½
+ * DELETE /api/prompts/{id}     - ï¿½ï¿½É¾ï¿½ï¿½
+ * POST   /api/prompts/{id}/use     - ï¿½ï¿½Â¼Ê¹ï¿½ï¿½
+ * GET    /api/prompts/favorites    - ï¿½Õ²ï¿½ï¿½Ð±ï¿½
+ * POST   /api/prompts/{id}/favorite - ï¿½Ð»ï¿½ï¿½Õ²ï¿½
  */
 
 $pdo = getDB();
@@ -19,7 +19,7 @@ $segments = getPathSegments('/api/');
 $action = $segments[1] ?? null;
 $subAction = $segments[2] ?? null;
 
-// ÌØÊâÂ·¾¶£º/api/prompts/favorites
+// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½/api/prompts/favorites
 if ($action === 'favorites' && $method === 'GET') {
     $stmt = $pdo->prepare("
         SELECT p.*, c.name as category_name, c.color as category_color,
@@ -40,13 +40,13 @@ if ($action === 'favorites' && $method === 'GET') {
     jsonSuccess($rows);
 }
 
-// ÒÔÏÂ²Ù×÷ÐèÒª½âÎö id
+// ï¿½ï¿½ï¿½Â²ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ id
 $id = is_numeric($action) ? (int)$action : null;
 
 switch ($method) {
     case 'GET':
         if ($id) {
-            // »ñÈ¡µ¥¸öÏêÇé
+            // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             $stmt = $pdo->prepare("
                 SELECT p.*, c.name as category_name, c.color as category_color,
                        GROUP_CONCAT(t.name) as tag_names, GROUP_CONCAT(t.id) as tag_ids
@@ -59,11 +59,11 @@ switch ($method) {
             ");
             $stmt->execute([$id]);
             $row = $stmt->fetch();
-            if (!$row) jsonError('ÌáÊ¾´Ê²»´æÔÚ', 404);
+            if (!$row) jsonError('ï¿½ï¿½Ê¾ï¿½Ê²ï¿½ï¿½ï¿½ï¿½ï¿½', 404);
             $row['tags'] = parseTags($row);
             jsonSuccess($row);
         } else {
-            // ÁÐ±í²éÑ¯£¨´øËÑË÷¡¢É¸Ñ¡¡¢ÅÅÐò£©
+            // ï¿½Ð±ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¸Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             $search   = getParam('search');
             $category = getParam('category');
             $tag      = getParam('tag');
@@ -105,12 +105,12 @@ switch ($method) {
             $offset = ($page - 1) * $perPage;
             $whereSQL = implode(' AND ', $where);
 
-            // ×ÜÊý
+            // ï¿½ï¿½ï¿½ï¿½
             $countStmt = $pdo->prepare("SELECT COUNT(*) FROM prompts p WHERE $whereSQL");
             $countStmt->execute($params);
             $total = $countStmt->fetchColumn();
 
-            // Êý¾Ý
+            // ï¿½ï¿½ï¿½ï¿½
             $sql = "
                 SELECT p.*, c.name as category_name, c.color as category_color,
                        GROUP_CONCAT(t.name) as tag_names, GROUP_CONCAT(t.id) as tag_ids
@@ -143,30 +143,30 @@ switch ($method) {
 
     case 'POST':
         if ($id && $subAction === 'use') {
-            // ¼ÇÂ¼Ê¹ÓÃ
+            // ï¿½ï¿½Â¼Ê¹ï¿½ï¿½
             $pdo->prepare("UPDATE prompts SET usage_count = usage_count + 1 WHERE id = ? AND is_deleted = 0")
                 ->execute([$id]);
             $input = getJsonInput();
             $pdo->prepare("INSERT INTO usage_logs (prompt_id, variables_used) VALUES (?, ?)")
                 ->execute([$id, isset($input['variables']) ? json_encode($input['variables'], JSON_UNESCAPED_UNICODE) : null]);
-            jsonSuccess(null, 'ÒÑ¼ÇÂ¼Ê¹ÓÃ');
+            jsonSuccess(null, 'ï¿½Ñ¼ï¿½Â¼Ê¹ï¿½ï¿½');
         }
 
         if ($id && $subAction === 'favorite') {
-            // ÇÐ»»ÊÕ²Ø
+            // ï¿½Ð»ï¿½ï¿½Õ²ï¿½
             $stmt = $pdo->prepare("SELECT is_favorite FROM prompts WHERE id = ?");
             $stmt->execute([$id]);
             $row = $stmt->fetch();
-            if (!$row) jsonError('ÌáÊ¾´Ê²»´æÔÚ', 404);
+            if (!$row) jsonError('ï¿½ï¿½Ê¾ï¿½Ê²ï¿½ï¿½ï¿½ï¿½ï¿½', 404);
             $newVal = $row['is_favorite'] ? 0 : 1;
             $pdo->prepare("UPDATE prompts SET is_favorite = ? WHERE id = ?")->execute([$newVal, $id]);
-            jsonSuccess(['is_favorite' => $newVal], $newVal ? 'ÒÑÊÕ²Ø' : 'ÒÑÈ¡ÏûÊÕ²Ø');
+            jsonSuccess(['is_favorite' => $newVal], $newVal ? 'ï¿½ï¿½ï¿½Õ²ï¿½' : 'ï¿½ï¿½È¡ï¿½ï¿½ï¿½Õ²ï¿½');
         }
 
-        // ´´½¨ÌáÊ¾´Ê
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½
         $input = getJsonInput();
-        if (empty($input['title'])) jsonError('±êÌâ²»ÄÜÎª¿Õ');
-        if (empty($input['content'])) jsonError('ÄÚÈÝ²»ÄÜÎª¿Õ');
+        if (empty($input['title'])) jsonError('ï¿½ï¿½ï¿½â²»ï¿½ï¿½Îªï¿½ï¿½');
+        if (empty($input['content'])) jsonError('ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Îªï¿½ï¿½');
 
         $stmt = $pdo->prepare("INSERT INTO prompts (title, content, category_id, is_favorite, created_at, updated_at)
                                VALUES (?, ?, ?, ?, ?, ?)");
@@ -180,19 +180,19 @@ switch ($method) {
         ]);
         $newId = $pdo->lastInsertId();
 
-        // ±£´æ±êÇ©¹ØÁª
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½
         if (!empty($input['tags']) && is_array($input['tags'])) {
             savePromptTags($pdo, $newId, $input['tags']);
         }
 
-        jsonSuccess(['id' => $newId], '´´½¨³É¹¦');
+        jsonSuccess(['id' => $newId], 'ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½');
         break;
 
     case 'PUT':
-        if (!$id) jsonError('È±ÉÙ ID');
+        if (!$id) jsonError('È±ï¿½ï¿½ ID');
         $input = getJsonInput();
-        if (empty($input['title'])) jsonError('±êÌâ²»ÄÜÎª¿Õ');
-        if (empty($input['content'])) jsonError('ÄÚÈÝ²»ÄÜÎª¿Õ');
+        if (empty($input['title'])) jsonError('ï¿½ï¿½ï¿½â²»ï¿½ï¿½Îªï¿½ï¿½');
+        if (empty($input['content'])) jsonError('ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Îªï¿½ï¿½');
 
         $stmt = $pdo->prepare("UPDATE prompts SET title=?, content=?, category_id=?, is_favorite=?, updated_at=? WHERE id=? AND is_deleted=0");
         $stmt->execute([
@@ -204,28 +204,28 @@ switch ($method) {
             $id,
         ]);
 
-        // ¸üÐÂ±êÇ©
+        // ï¿½ï¿½ï¿½Â±ï¿½Ç©
         if (isset($input['tags']) && is_array($input['tags'])) {
             $pdo->prepare("DELETE FROM prompt_tags WHERE prompt_id = ?")->execute([$id]);
             savePromptTags($pdo, $id, $input['tags']);
         }
 
-        jsonSuccess(null, '¸üÐÂ³É¹¦');
+        jsonSuccess(null, 'ï¿½ï¿½ï¿½Â³É¹ï¿½');
         break;
 
     case 'DELETE':
-        if (!$id) jsonError('È±ÉÙ ID');
+        if (!$id) jsonError('È±ï¿½ï¿½ ID');
         $pdo->prepare("UPDATE prompts SET is_deleted = 1, deleted_at = ? WHERE id = ?")
             ->execute([now(), $id]);
-        jsonSuccess(null, 'ÒÑÒÆÖÁ»ØÊÕÕ¾');
+        jsonSuccess(null, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾');
         break;
 
     default:
-        jsonError('²»Ö§³ÖµÄÇëÇó·½·¨', 405);
+        jsonError('ï¿½ï¿½Ö§ï¿½Öµï¿½ï¿½ï¿½ï¿½ó·½·ï¿½', 405);
 }
 
 /**
- * ½âÎö±êÇ©Êý¾Ý
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½
  */
 function parseTags($row) {
     $tags = [];
@@ -240,16 +240,16 @@ function parseTags($row) {
 }
 
 /**
- * ±£´æÌáÊ¾´Ê±êÇ©¹ØÁª£¨×Ô¶¯´´½¨ÐÂ±êÇ©£©
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ê±ï¿½Ç©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½Ç©ï¿½ï¿½
  */
 function savePromptTags($pdo, $promptId, $tags) {
     foreach ($tags as $tag) {
         if (is_numeric($tag)) {
-            // ÒÑÓÐ±êÇ© ID
+            // ï¿½ï¿½ï¿½Ð±ï¿½Ç© ID
             $pdo->prepare("INSERT OR IGNORE INTO prompt_tags (prompt_id, tag_id) VALUES (?, ?)")
                 ->execute([$promptId, (int)$tag]);
         } elseif (is_string($tag) && $tag !== '') {
-            // ±êÇ©Ãû£¬×Ô¶¯´´½¨
+            // ï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
             $pdo->prepare("INSERT OR IGNORE INTO tags (name) VALUES (?)")->execute([$tag]);
             $tagId = $pdo->prepare("SELECT id FROM tags WHERE name = ?");
             $tagId->execute([$tag]);

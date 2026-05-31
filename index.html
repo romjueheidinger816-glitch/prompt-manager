@@ -1,49 +1,42 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>提示词管理系统 - Prompt Manager</title>
-    
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-
+    <title>Prompt Manager</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="app-container">
+        <!-- ���������� -->
         <header class="top-bar">
             <div class="top-bar-left">
-                <button class="btn-icon sidebar-toggle" id="sidebarToggle" title="切换侧栏">
+                <button class="btn-icon sidebar-toggle" id="sidebarToggle" data-i18n-title="listView">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
                 <div class="logo">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <span class="logo-text">Prompt Manager</span>
+                    <span class="logo-text" data-i18n="appName">Prompt Manager</span>
                 </div>
             </div>
             <div class="top-bar-center">
                 <div class="search-box">
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <input type="text" id="globalSearch" placeholder="搜索提示词..." autocomplete="off">
+                    <input type="text" id="globalSearch" data-i18n-placeholder="searchPlaceholder" autocomplete="off">
                     <kbd class="search-kbd">Ctrl+K</kbd>
                 </div>
             </div>
             <div class="top-bar-right">
                 <button class="btn btn-primary" id="btnNewPrompt">
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 4v12m-6-6h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                    新建提示词
+                    <span data-i18n="btnNewPrompt">New Prompt</span>
                 </button>
-                <button class="btn-icon" id="btnThemeToggle" title="切换主题">
+                <button class="btn-icon" id="btnLangToggle" title="Switch Language">
+                    <span style="font-size:0.85rem;font-weight:600;" id="langLabel">EN</span>
+                </button>
+                <button class="btn-icon" id="btnThemeToggle" data-i18n-title="settingsTheme">
                     <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
@@ -51,91 +44,90 @@
         </header>
 
         <div class="app-body">
+            <!-- ����� -->
             <aside class="sidebar" id="sidebar">
                 <nav class="sidebar-nav">
                     <div class="nav-section">
                         <a class="nav-item active" data-view="all" href="#">
                             <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm-6 6h4v4H4v-4zm6 0h4v4h-4v-4z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            <span>全部提示词</span>
+                            <span data-i18n="navAll">All Prompts</span>
                         </a>
                         <a class="nav-item" data-view="favorites" href="#">
                             <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            <span>收藏</span>
+                            <span data-i18n="navFavorites">Favorites</span>
                         </a>
                         <a class="nav-item" data-view="dashboard" href="#">
                             <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            <span>数据统计</span>
+                            <span data-i18n="navDashboard">Dashboard</span>
                         </a>
                     </div>
 
                     <div class="nav-section">
                         <div class="nav-section-header">
-                            <span>分类</span>
-                            <button class="btn-icon-sm" id="btnAddCategory" title="添加分类">
+                            <span data-i18n="navCategories">Categories</span>
+                            <button class="btn-icon-sm" id="btnAddCategory" data-i18n-title="btnAddCategory">
                                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 4v12m-6-6h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                             </button>
                         </div>
-                        <div id="categoryTree" class="category-tree">
-                            </div>
+                        <div id="categoryTree" class="category-tree"></div>
                     </div>
 
                     <div class="nav-section">
                         <div class="nav-section-header">
-                            <span>标签</span>
+                            <span data-i18n="navTags">Tags</span>
                         </div>
-                        <div id="tagCloud" class="tag-cloud">
-                            </div>
+                        <div id="tagCloud" class="tag-cloud"></div>
                     </div>
                 </nav>
 
                 <div class="sidebar-footer">
                     <a class="nav-item" data-view="trash" href="#">
                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H3.862a2 2 0 01-1.995-1.858L1 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <span>回收站</span>
+                        <span data-i18n="navTrash">Trash</span>
                     </a>
                     <a class="nav-item" data-view="settings" href="#">
                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <span>设置</span>
+                        <span data-i18n="navSettings">Settings</span>
                     </a>
                 </div>
             </aside>
 
+            <!-- �������� -->
             <main class="main-content" id="mainContent">
                 <div class="content-header" id="contentHeader">
                     <div class="content-header-left">
-                        <h2 id="viewTitle">全部提示词</h2>
-                        <span class="prompt-count" id="promptCount">0 个</span>
+                        <h2 id="viewTitle" data-i18n="viewAll">All Prompts</h2>
+                        <span class="prompt-count" id="promptCount">0</span>
                     </div>
                     <div class="content-header-right">
                         <div class="sort-select">
                             <select id="sortSelect">
-                                <option value="updated_at">最近更新</option>
-                                <option value="created_at">创建时间</option>
-                                <option value="usage_count">使用频率</option>
-                                <option value="title">按标题</option>
+                                <option value="updated_at" data-i18n-option="sortByUpdated">Last Updated</option>
+                                <option value="created_at" data-i18n-option="sortByCreated">Created</option>
+                                <option value="usage_count" data-i18n-option="sortByUsage">Most Used</option>
+                                <option value="title" data-i18n-option="sortByName">By Title</option>
                             </select>
                         </div>
                         <div class="view-toggle">
-                            <button class="btn-icon active" id="btnListView" title="列表视图">
+                            <button class="btn-icon active" id="btnListView" data-i18n-title="listView">
                                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                             </button>
-                            <button class="btn-icon" id="btnCardView" title="卡片视图">
+                            <button class="btn-icon" id="btnCardView" data-i18n-title="cardView">
                                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 4h4v4H4V4zm8 0h4v4h-4V4zm-8 8h4v4H4v-4zm8 0h4v4h-4v-4z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </button>
                         </div>
                     </div>
                 </div>
-
-                <div class="content-body" id="contentBody">
-                    </div>
+                <div class="content-body" id="contentBody"></div>
             </main>
         </div>
     </div>
 
+    <!-- ��������ʾ�ʱ༭�� -->
     <div class="modal-overlay" id="editorModal">
         <div class="modal modal-lg">
             <div class="modal-header">
-                <h3 id="editorTitle">新建提示词</h3>
+                <h3 id="editorTitle" data-i18n="editorNew">New Prompt</h3>
                 <button class="btn-icon" id="editorClose">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
@@ -144,29 +136,29 @@
                 <div class="editor-form">
                     <div class="form-row">
                         <div class="form-group flex-1">
-                            <label>标题 <span class="required">*</span></label>
-                            <input type="text" id="editorTitleInput" placeholder="给提示词起个名字">
+                            <label data-i18n="editorTitleLabel">Title</label>
+                            <input type="text" id="editorTitleInput" data-i18n-placeholder="editorTitlePlaceholder">
                         </div>
                         <div class="form-group">
-                            <label>分类</label>
+                            <label data-i18n="editorCategoryLabel">Category</label>
                             <select id="editorCategory">
-                                <option value="">未分类</option>
+                                <option value="" data-i18n="editorCategoryNone">Uncategorized</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>标签</label>
+                        <label data-i18n="editorTagLabel">Tags</label>
                         <div class="tag-input-wrapper">
                             <div id="editorTagsDisplay" class="tag-input-tags"></div>
-                            <input type="text" id="editorTagInput" placeholder="输入标签后回车添加" class="tag-input-field">
+                            <input type="text" id="editorTagInput" class="tag-input-field" data-i18n-placeholder="editorTagPlaceholder">
                             <div id="tagSuggestions" class="tag-suggestions" style="display:none;"></div>
                         </div>
                     </div>
                     <div class="form-group editor-content-group">
-                        <label>内容 <span class="required">*</span> <span class="hint">支持 Markdown，变量格式：{{变量名|默认值}}</span></label>
+                        <label><span data-i18n="editorContentLabel">Content</span> <span class="hint" data-i18n="editorContentHint"></span></label>
                         <div class="editor-split">
                             <div class="editor-pane">
-                                <textarea id="editorContent" placeholder="在这里输入提示词内容...&#10;&#10;使用 {{变量名}} 定义变量&#10;使用 {{变量名|默认值}} 设置默认值"></textarea>
+                                <textarea id="editorContent" data-i18n-placeholder="editorContentPlaceholder"></textarea>
                             </div>
                             <div class="preview-pane" id="editorPreview">
                                 <div class="preview-content"></div>
@@ -176,16 +168,17 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" id="editorCancel">取消</button>
-                <button class="btn btn-primary" id="editorSave">保存</button>
+                <button class="btn btn-ghost" id="editorCancel" data-i18n="editorCancel">Cancel</button>
+                <button class="btn btn-primary" id="editorSave" data-i18n="editorSave">Save</button>
             </div>
         </div>
     </div>
 
+    <!-- ������������д -->
     <div class="modal-overlay" id="variableModal">
         <div class="modal modal-md">
             <div class="modal-header">
-                <h3>填写变量</h3>
+                <h3 data-i18n="varModalTitle">Fill Variables</h3>
                 <button class="btn-icon" id="variableClose">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
@@ -194,47 +187,49 @@
                 <div id="variableFields"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" id="variableCancel">取消</button>
-                <button class="btn btn-primary" id="variableConfirm">生成并复制</button>
+                <button class="btn btn-ghost" id="variableCancel" data-i18n="varModalCancel">Cancel</button>
+                <button class="btn btn-primary" id="variableConfirm" data-i18n="varModalConfirm">Generate &amp; Copy</button>
             </div>
         </div>
     </div>
 
+    <!-- ����������༭ -->
     <div class="modal-overlay" id="categoryModal">
         <div class="modal modal-sm">
             <div class="modal-header">
-                <h3 id="categoryModalTitle">添加分类</h3>
+                <h3 id="categoryModalTitle" data-i18n="catModalAdd">Add Category</h3>
                 <button class="btn-icon" id="categoryClose">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>分类名称</label>
-                    <input type="text" id="categoryNameInput" placeholder="输入分类名称">
+                    <label data-i18n="catNameLabel">Category Name</label>
+                    <input type="text" id="categoryNameInput" data-i18n-placeholder="catNamePlaceholder">
                 </div>
                 <div class="form-group">
-                    <label>父分类</label>
+                    <label data-i18n="catParentLabel">Parent Category</label>
                     <select id="categoryParentInput">
-                        <option value="">无（顶级分类）</option>
+                        <option value="" data-i18n="catParentNone">None (Top Level)</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>颜色标记</label>
+                    <label data-i18n="catColorLabel">Color</label>
                     <input type="color" id="categoryColorInput" value="#6366f1">
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" id="categoryCancel">取消</button>
-                <button class="btn btn-primary" id="categorySave">保存</button>
+                <button class="btn btn-ghost" id="categoryCancel" data-i18n="catCancel">Cancel</button>
+                <button class="btn btn-primary" id="categorySave" data-i18n="catSave">Save</button>
             </div>
         </div>
     </div>
 
+    <!-- ������ȷ�� -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal modal-sm">
             <div class="modal-header">
-                <h3 id="confirmTitle">确认操作</h3>
+                <h3 id="confirmTitle">Confirm</h3>
                 <button class="btn-icon" id="confirmClose">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
@@ -243,14 +238,17 @@
                 <p id="confirmMessage"></p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" id="confirmCancel">取消</button>
-                <button class="btn btn-danger" id="confirmOk">确认</button>
+                <button class="btn btn-ghost" id="confirmCancel" data-i18n="confirmCancel">Cancel</button>
+                <button class="btn btn-danger" id="confirmOk" data-i18n="confirmOk">Confirm</button>
             </div>
         </div>
     </div>
 
+    <!-- Toast -->
     <div id="toastContainer" class="toast-container"></div>
 
+    <!-- JS��ע�����˳�� -->
+    <script src="js/lang.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
     <script src="js/promptEditor.js"></script>

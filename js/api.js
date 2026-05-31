@@ -1,6 +1,5 @@
-/**
- * API ÇëÇó·â×°
- * Í³Ò»´¦ÀíÇëÇóºÍ´íÎó
+ï»¿/**
+ * API ï¿½ï¿½ï¿½ï¿½ï¿½×°
  */
 
 const API_BASE = 'api';
@@ -19,19 +18,18 @@ async function apiRequest(path, options = {}) {
         const res = await fetch(url, config);
         const data = await res.json();
         if (!data.success) {
-            showToast(data.message || 'ÇëÇóÊ§°Ü', 'error');
+            showToast(data.message || 'toastLoadFail', 'error');
             throw new Error(data.message);
         }
         return data.data;
     } catch (err) {
-        if (err.message && !err.message.includes('ÇëÇóÊ§°Ü')) {
-            showToast('ÍøÂç´íÎó£¬Çë¼ì²éÁ¬½Ó', 'error');
+        if (err.message && !err.message.includes('toast')) {
+            showToast('toastNetworkError', 'error');
         }
         throw err;
     }
 }
 
-// ---- ÌáÊ¾´Ê API ----
 const PromptAPI = {
     list: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
@@ -46,7 +44,6 @@ const PromptAPI = {
     toggleFavorite: (id) => apiRequest(`prompts/${id}/favorite`, { method: 'POST' }),
 };
 
-// ---- ·ÖÀà API ----
 const CategoryAPI = {
     list: () => apiRequest('categories'),
     create: (data) => apiRequest('categories', { method: 'POST', body: data }),
@@ -54,35 +51,27 @@ const CategoryAPI = {
     delete: (id) => apiRequest(`categories/${id}`, { method: 'DELETE' }),
 };
 
-// ---- ±êÇ© API ----
 const TagAPI = {
     list: () => apiRequest('tags'),
     create: (data) => apiRequest('tags', { method: 'POST', body: data }),
     delete: (id) => apiRequest(`tags/${id}`, { method: 'DELETE' }),
 };
 
-// ---- µ¼Èëµ¼³ö API ----
 const ExportAPI = {
-    json: () => {
-        window.open(`${API_BASE}/export/json`, '_blank');
-    },
-    markdown: () => {
-        window.open(`${API_BASE}/export/markdown`, '_blank');
-    },
+    json: () => { window.open(`${API_BASE}/export/json`, '_blank'); },
+    markdown: () => { window.open(`${API_BASE}/export/markdown`, '_blank'); },
 };
 
 const ImportAPI = {
     json: (data) => apiRequest('import/json', { method: 'POST', body: data }),
 };
 
-// ---- »ØÊÕÕ¾ API ----
 const TrashAPI = {
     list: () => apiRequest('trash'),
     restore: (id) => apiRequest(`trash/${id}/restore`, { method: 'POST' }),
     permanent: (id) => apiRequest(`trash/${id}/permanent`, { method: 'DELETE' }),
 };
 
-// ---- Í³¼Æ API ----
 const StatsAPI = {
     get: () => apiRequest('stats'),
 };
