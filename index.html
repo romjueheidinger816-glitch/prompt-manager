@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptVault - 提示词管理系统</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><span class="icon">⚡</span> PromptVault</h1>
+            <div class="theme-toggle" id="theme-toggle" title="切换主题">
+                <span class="theme-toggle-icon">🌙</span>
+                <div class="theme-toggle-track">
+                    <div class="theme-toggle-thumb"></div>
+                </div>
+                <span class="theme-toggle-icon">☀️</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-label">导航</div>
+            <div class="nav-item active" id="nav-dashboard">📊 <span>仪表盘</span></div>
+            <div class="nav-item" id="nav-all">📋 <span>全部提示词</span></div>
+            <div class="nav-item" id="nav-favorites">⭐ <span>我的收藏</span></div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-label">分类</div>
+            <div id="category-nav"></div>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="nav-item" id="btn-manage-categories">⚙️ <span>管理分类</span></div>
+            <div class="nav-item" id="btn-export">📤 <span>导出数据</span></div>
+        </div>
+    </aside>
+
+    <!-- ===== Main ===== -->
+    <div class="main">
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <button class="btn-icon mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" placeholder="搜索提示词标题、内容、标签...">
+            </div>
+            <select class="sort-select" id="sort-select">
+                <option value="updated_at-DESC">最近更新</option>
+                <option value="created_at-DESC">最新创建</option>
+                <option value="rating-DESC">评分最高</option>
+                <option value="usage_count-DESC">使用最多</option>
+                <option value="title-ASC">标题 A-Z</option>
+            </select>
+            <div class="toolbar-actions">
+                <button class="btn btn-primary" id="btn-new-prompt">＋ 新建提示词</button>
+            </div>
+        </div>
+
+        <!-- ===== Dashboard View ===== -->
+        <div class="content view-panel" id="view-dashboard" style="display:block">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">📝</span>
+                    <div class="stat-label">提示词总数</div>
+                    <div class="stat-value" id="stat-total">0</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">⭐</span>
+                    <div class="stat-label">收藏数量</div>
+                    <div class="stat-value" id="stat-favorites">0</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📊</span>
+                    <div class="stat-label">累计使用</div>
+                    <div class="stat-value" id="stat-usage">0</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🏆</span>
+                    <div class="stat-label">平均评分</div>
+                    <div class="stat-value" id="stat-rating">0</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-section">
+                    <h3>⭐ 最高评分</h3>
+                    <div id="top-rated-list"></div>
+                </div>
+                <div class="dashboard-section">
+                    <h3>🔥 最常使用</h3>
+                    <div id="most-used-list"></div>
+                </div>
+                <div class="dashboard-section">
+                    <h3>🏷️ 标签分布</h3>
+                    <div class="tag-cloud" id="tags-cloud"></div>
+                </div>
+                <div class="dashboard-section">
+                    <h3>📁 分类统计</h3>
+                    <div id="category-dist"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Prompts List View ===== -->
+        <div class="content view-panel" id="view-prompts" style="display:none">
+            <div class="prompts-grid" id="prompts-grid"></div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Prompt Edit Modal ===== -->
+<div class="modal-overlay" id="prompt-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="prompt-modal-title">新建提示词</h2>
+            <button class="btn-icon" data-close>✕</button>
+        </div>
+        <form id="prompt-form">
+            <div class="modal-body">
+                <input type="hidden" name="id" value="">
+                <div class="form-group">
+                    <label>标题 *</label>
+                    <input type="text" name="title" required placeholder="给你的提示词起个名字">
+                </div>
+                <div class="form-group">
+                    <label>提示词内容 *</label>
+                    <textarea name="content" required placeholder="在此输入提示词内容..." rows="6"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>分类</label>
+                        <select name="category_id">
+                            <option value="">未分类</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>标签（逗号分隔）</label>
+                        <input type="text" name="tags" placeholder="例如: 写作,营销,GPT">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea name="notes" placeholder="使用场景、注意事项等..." rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" data-close>取消</button>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== Detail Modal ===== -->
+<div class="modal-overlay" id="detail-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>提示词详情</h2>
+            <button class="btn-icon" data-close>✕</button>
+        </div>
+        <div class="modal-body" id="detail-body"></div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" data-close>关闭</button>
+            <button class="btn btn-ghost" id="detail-edit-btn">✏️ 编辑</button>
+            <button class="btn btn-primary" id="detail-copy-btn">📋 复制内容</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Confirm Delete Modal ===== -->
+<div class="modal-overlay confirm-dialog" id="confirm-overlay">
+    <div class="modal">
+        <div class="modal-body">
+            <div style="font-size:32px;margin-bottom:8px">⚠️</div>
+            <p><strong>确定删除这条提示词？</strong></p>
+            <p>此操作无法撤销。</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" id="confirm-no">取消</button>
+            <button class="btn btn-danger" id="confirm-yes">确认删除</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Category Manager Modal ===== -->
+<div class="modal-overlay" id="category-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>管理分类</h2>
+            <button class="btn-icon" data-close>✕</button>
+        </div>
+        <div class="modal-body">
+            <div style="display:flex;gap:8px;margin-bottom:16px">
+                <input type="color" id="new-category-color" value="#6366f1" style="width:36px;height:36px;border:none;border-radius:6px;cursor:pointer;padding:0;background:none">
+                <input type="text" id="new-category-name" placeholder="新分类名称" style="flex:1;background:var(--bg-input);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:var(--radius);font-size:14px;outline:none">
+                <button class="btn btn-primary" id="btn-add-category">添加</button>
+            </div>
+            <div id="category-manage-list"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Toast Container ===== -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ===== Theme initialization (before app.js to prevent flash) ===== -->
+<script>
+(function() {
+    var saved = localStorage.getItem('promptvault-theme');
+    var theme = saved || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+
+<!-- ===== Populate category selects dynamically ===== -->
+<script>
+    (function() {
+        var observer = new MutationObserver(function() {
+            var navItems = document.querySelectorAll('#category-nav .nav-item');
+            var selects = document.querySelectorAll('#prompt-form select[name="category_id"]');
+            if (!navItems.length || !selects.length) return;
+
+            selects.forEach(function(sel) {
+                var current = sel.value;
+                sel.innerHTML = '<option value="">未分类</option>';
+                navItems.forEach(function(item) {
+                    var id = item.dataset.category;
+                    var name = item.querySelector('span:nth-child(2)').textContent;
+                    sel.innerHTML += '<option value="' + id + '">' + name + '</option>';
+                });
+                sel.value = current;
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var target = document.getElementById('category-nav');
+            if (target) {
+                observer.observe(target, { childList: true, subtree: true });
+            }
+        });
+    })();
+</script>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
