@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ã· æ¥ π‹¿ÌœµÕ≥ - Prompt Manager</title>
-    <!-- CDN “¿¿µ -->
+    <title>ÊèêÁ§∫ËØçÁÆ°ÁêÜÁ≥ªÁªü - Prompt Manager</title>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "ÂæÆËΩØÈõÖÈªë", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- ’˚ÃÂ≤ºæ÷ -->
     <div class="app-container">
-        <!-- ∂•≤øµº∫Ω¿∏ -->
         <header class="top-bar">
             <div class="top-bar-left">
-                <button class="btn-icon sidebar-toggle" id="sidebarToggle" title="«–ªª≤‡¿∏">
+                <button class="btn-icon sidebar-toggle" id="sidebarToggle" title="ÂàáÊç¢‰æßÊ†è">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
                 <div class="logo">
@@ -26,16 +34,16 @@
             <div class="top-bar-center">
                 <div class="search-box">
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <input type="text" id="globalSearch" placeholder="À—À˜Ã· æ¥ ..." autocomplete="off">
+                    <input type="text" id="globalSearch" placeholder="ÊêúÁ¥¢ÊèêÁ§∫ËØç..." autocomplete="off">
                     <kbd class="search-kbd">Ctrl+K</kbd>
                 </div>
             </div>
             <div class="top-bar-right">
                 <button class="btn btn-primary" id="btnNewPrompt">
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 4v12m-6-6h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                    –¬Ω®Ã· æ¥ 
+                    Êñ∞Âª∫ÊèêÁ§∫ËØç
                 </button>
-                <button class="btn-icon" id="btnThemeToggle" title="«–ªª÷˜Ã‚">
+                <button class="btn-icon" id="btnThemeToggle" title="ÂàáÊç¢‰∏ªÈ¢ò">
                     <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
@@ -43,99 +51,91 @@
         </header>
 
         <div class="app-body">
-            <!-- ◊Û≤‡¿∏ -->
             <aside class="sidebar" id="sidebar">
                 <nav class="sidebar-nav">
                     <div class="nav-section">
                         <a class="nav-item active" data-view="all" href="#">
                             <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm-6 6h4v4H4v-4zm6 0h4v4h-4v-4z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            <span>»´≤øÃ· æ¥ </span>
+                            <span>ÂÖ®ÈÉ®ÊèêÁ§∫ËØç</span>
                         </a>
                         <a class="nav-item" data-view="favorites" href="#">
                             <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            <span> ’≤ÿ</span>
+                            <span>Êî∂Ëóè</span>
                         </a>
                         <a class="nav-item" data-view="dashboard" href="#">
                             <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            <span> ˝æ›Õ≥º∆</span>
+                            <span>Êï∞ÊçÆÁªüËÆ°</span>
                         </a>
                     </div>
 
                     <div class="nav-section">
                         <div class="nav-section-header">
-                            <span>∑÷¿‡</span>
-                            <button class="btn-icon-sm" id="btnAddCategory" title="ÃÌº”∑÷¿‡">
+                            <span>ÂàÜÁ±ª</span>
+                            <button class="btn-icon-sm" id="btnAddCategory" title="Ê∑ªÂä†ÂàÜÁ±ª">
                                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 4v12m-6-6h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                             </button>
                         </div>
                         <div id="categoryTree" class="category-tree">
-                            <!-- ∑÷¿‡ ˜”… JS ∂ØÃ¨…˙≥… -->
-                        </div>
+                            </div>
                     </div>
 
                     <div class="nav-section">
                         <div class="nav-section-header">
-                            <span>±Í«©</span>
+                            <span>Ê†áÁ≠æ</span>
                         </div>
                         <div id="tagCloud" class="tag-cloud">
-                            <!-- ±Í«©‘∆”… JS ∂ØÃ¨…˙≥… -->
-                        </div>
+                            </div>
                     </div>
                 </nav>
 
                 <div class="sidebar-footer">
                     <a class="nav-item" data-view="trash" href="#">
                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H3.862a2 2 0 01-1.995-1.858L1 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <span>ªÿ ’’æ</span>
+                        <span>ÂõûÊî∂Á´ô</span>
                     </a>
                     <a class="nav-item" data-view="settings" href="#">
                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <span>…Ë÷√</span>
+                        <span>ËÆæÁΩÆ</span>
                     </a>
                 </div>
             </aside>
 
-            <!-- ÷˜ƒ⁄»›«¯ -->
             <main class="main-content" id="mainContent">
-                <!-- ¡–±Ì ”ÕºÕ∑≤ø -->
                 <div class="content-header" id="contentHeader">
                     <div class="content-header-left">
-                        <h2 id="viewTitle">»´≤øÃ· æ¥ </h2>
-                        <span class="prompt-count" id="promptCount">0 ∏ˆ</span>
+                        <h2 id="viewTitle">ÂÖ®ÈÉ®ÊèêÁ§∫ËØç</h2>
+                        <span class="prompt-count" id="promptCount">0 ‰∏™</span>
                     </div>
                     <div class="content-header-right">
                         <div class="sort-select">
                             <select id="sortSelect">
-                                <option value="updated_at">◊ÓΩ¸∏¸–¬</option>
-                                <option value="created_at">¥¥Ω® ±º‰</option>
-                                <option value="usage_count"> π”√∆µ¬ </option>
-                                <option value="title">∞¥±ÍÃ‚</option>
+                                <option value="updated_at">ÊúÄËøëÊõ¥Êñ∞</option>
+                                <option value="created_at">ÂàõÂª∫Êó∂Èó¥</option>
+                                <option value="usage_count">‰ΩøÁî®È¢ëÁéá</option>
+                                <option value="title">ÊåâÊ†áÈ¢ò</option>
                             </select>
                         </div>
                         <div class="view-toggle">
-                            <button class="btn-icon active" id="btnListView" title="¡–±Ì ”Õº">
+                            <button class="btn-icon active" id="btnListView" title="ÂàóË°®ËßÜÂõæ">
                                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                             </button>
-                            <button class="btn-icon" id="btnCardView" title="ø®∆¨ ”Õº">
+                            <button class="btn-icon" id="btnCardView" title="Âç°ÁâáËßÜÂõæ">
                                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 4h4v4H4V4zm8 0h4v4h-4V4zm-8 8h4v4H4v-4zm8 0h4v4h-4v-4z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- ƒ⁄»›»›∆˜£®¡–±Ì/ø®∆¨/±‡º≠∆˜/“«±Ì≈Ã/…Ë÷√£© -->
                 <div class="content-body" id="contentBody">
-                    <!-- ”… JS ∂ØÃ¨‰÷»æ -->
-                </div>
+                    </div>
             </main>
         </div>
     </div>
 
-    <!-- µØ¥∞£∫Ã· æ¥ ±‡º≠∆˜ -->
     <div class="modal-overlay" id="editorModal">
         <div class="modal modal-lg">
             <div class="modal-header">
-                <h3 id="editorTitle">–¬Ω®Ã· æ¥ </h3>
+                <h3 id="editorTitle">Êñ∞Âª∫ÊèêÁ§∫ËØç</h3>
                 <button class="btn-icon" id="editorClose">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
@@ -144,29 +144,29 @@
                 <div class="editor-form">
                     <div class="form-row">
                         <div class="form-group flex-1">
-                            <label>±ÍÃ‚ <span class="required">*</span></label>
-                            <input type="text" id="editorTitleInput" placeholder="∏¯Ã· æ¥ ∆∏ˆ√˚◊÷">
+                            <label>Ê†áÈ¢ò <span class="required">*</span></label>
+                            <input type="text" id="editorTitleInput" placeholder="ÁªôÊèêÁ§∫ËØçËµ∑‰∏™ÂêçÂ≠ó">
                         </div>
                         <div class="form-group">
-                            <label>∑÷¿‡</label>
+                            <label>ÂàÜÁ±ª</label>
                             <select id="editorCategory">
-                                <option value="">Œ¥∑÷¿‡</option>
+                                <option value="">Êú™ÂàÜÁ±ª</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>±Í«©</label>
+                        <label>Ê†áÁ≠æ</label>
                         <div class="tag-input-wrapper">
                             <div id="editorTagsDisplay" class="tag-input-tags"></div>
-                            <input type="text" id="editorTagInput" placeholder=" ‰»Î±Í«©∫Ûªÿ≥µÃÌº”" class="tag-input-field">
+                            <input type="text" id="editorTagInput" placeholder="ËæìÂÖ•Ê†áÁ≠æÂêéÂõûËΩ¶Ê∑ªÂä†" class="tag-input-field">
                             <div id="tagSuggestions" class="tag-suggestions" style="display:none;"></div>
                         </div>
                     </div>
                     <div class="form-group editor-content-group">
-                        <label>ƒ⁄»› <span class="required">*</span> <span class="hint">÷ß≥÷ Markdown£¨±‰¡ø∏Ò Ω£∫{{±‰¡ø√˚|ƒ¨»œ÷µ}}</span></label>
+                        <label>ÂÜÖÂÆπ <span class="required">*</span> <span class="hint">ÊîØÊåÅ MarkdownÔºåÂèòÈáèÊ†ºÂºèÔºö{{ÂèòÈáèÂêç|ÈªòËÆ§ÂÄº}}</span></label>
                         <div class="editor-split">
                             <div class="editor-pane">
-                                <textarea id="editorContent" placeholder="‘⁄’‚¿Ô ‰»ÎÃ· æ¥ ƒ⁄»›...&#10;&#10; π”√ {{±‰¡ø√˚}} ∂®“Â±‰¡ø&#10; π”√ {{±‰¡ø√˚|ƒ¨»œ÷µ}} …Ë÷√ƒ¨»œ÷µ"></textarea>
+                                <textarea id="editorContent" placeholder="Âú®ËøôÈáåËæìÂÖ•ÊèêÁ§∫ËØçÂÜÖÂÆπ...&#10;&#10;‰ΩøÁî® {{ÂèòÈáèÂêç}} ÂÆö‰πâÂèòÈáè&#10;‰ΩøÁî® {{ÂèòÈáèÂêç|ÈªòËÆ§ÂÄº}} ËÆæÁΩÆÈªòËÆ§ÂÄº"></textarea>
                             </div>
                             <div class="preview-pane" id="editorPreview">
                                 <div class="preview-content"></div>
@@ -176,17 +176,16 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" id="editorCancel">»°œ˚</button>
-                <button class="btn btn-primary" id="editorSave">±£¥Ê</button>
+                <button class="btn btn-ghost" id="editorCancel">ÂèñÊ∂à</button>
+                <button class="btn btn-primary" id="editorSave">‰øùÂ≠ò</button>
             </div>
         </div>
     </div>
 
-    <!-- µØ¥∞£∫±‰¡øÃÓ–¥ -->
     <div class="modal-overlay" id="variableModal">
         <div class="modal modal-md">
             <div class="modal-header">
-                <h3>ÃÓ–¥±‰¡ø</h3>
+                <h3>Â°´ÂÜôÂèòÈáè</h3>
                 <button class="btn-icon" id="variableClose">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
@@ -195,49 +194,47 @@
                 <div id="variableFields"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" id="variableCancel">»°œ˚</button>
-                <button class="btn btn-primary" id="variableConfirm">…˙≥…≤¢∏¥÷∆</button>
+                <button class="btn btn-ghost" id="variableCancel">ÂèñÊ∂à</button>
+                <button class="btn btn-primary" id="variableConfirm">ÁîüÊàêÂπ∂Â§çÂà∂</button>
             </div>
         </div>
     </div>
 
-    <!-- µØ¥∞£∫∑÷¿‡±‡º≠ -->
     <div class="modal-overlay" id="categoryModal">
         <div class="modal modal-sm">
             <div class="modal-header">
-                <h3 id="categoryModalTitle">ÃÌº”∑÷¿‡</h3>
+                <h3 id="categoryModalTitle">Ê∑ªÂä†ÂàÜÁ±ª</h3>
                 <button class="btn-icon" id="categoryClose">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>∑÷¿‡√˚≥∆</label>
-                    <input type="text" id="categoryNameInput" placeholder=" ‰»Î∑÷¿‡√˚≥∆">
+                    <label>ÂàÜÁ±ªÂêçÁß∞</label>
+                    <input type="text" id="categoryNameInput" placeholder="ËæìÂÖ•ÂàÜÁ±ªÂêçÁß∞">
                 </div>
                 <div class="form-group">
-                    <label>∏∏∑÷¿‡</label>
+                    <label>Áà∂ÂàÜÁ±ª</label>
                     <select id="categoryParentInput">
-                        <option value="">Œﬁ£®∂•º∂∑÷¿‡£©</option>
+                        <option value="">Êó†ÔºàÈ°∂Á∫ßÂàÜÁ±ªÔºâ</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>—’…´±Íº«</label>
+                    <label>È¢úËâ≤Ê†áËÆ∞</label>
                     <input type="color" id="categoryColorInput" value="#6366f1">
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" id="categoryCancel">»°œ˚</button>
-                <button class="btn btn-primary" id="categorySave">±£¥Ê</button>
+                <button class="btn btn-ghost" id="categoryCancel">ÂèñÊ∂à</button>
+                <button class="btn btn-primary" id="categorySave">‰øùÂ≠ò</button>
             </div>
         </div>
     </div>
 
-    <!-- µØ¥∞£∫»∑»œ…æ≥˝ -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal modal-sm">
             <div class="modal-header">
-                <h3 id="confirmTitle">»∑»œ≤Ÿ◊˜</h3>
+                <h3 id="confirmTitle">Á°ÆËÆ§Êìç‰Ωú</h3>
                 <button class="btn-icon" id="confirmClose">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
@@ -246,16 +243,14 @@
                 <p id="confirmMessage"></p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" id="confirmCancel">»°œ˚</button>
-                <button class="btn btn-danger" id="confirmOk">»∑»œ</button>
+                <button class="btn btn-ghost" id="confirmCancel">ÂèñÊ∂à</button>
+                <button class="btn btn-danger" id="confirmOk">Á°ÆËÆ§</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Ã· æ -->
     <div id="toastContainer" class="toast-container"></div>
 
-    <!-- JS Œƒº˛ -->
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
     <script src="js/promptEditor.js"></script>
